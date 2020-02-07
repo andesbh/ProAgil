@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ProAgil.api.Models;
 
 namespace ProAgil.api.Controllers
 {
@@ -12,9 +13,13 @@ namespace ProAgil.api.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Eventos>> Get()
         {
-            return new string[] { "value1", "value2", "value3" };
+            
+            return new List<Eventos>()
+            {new Eventos{Tema="Teste", Local="teste2"},
+            {new Eventos{Tema="Test3", Local="teste4"}}};
+            
         }
 
         // GET api/values/5

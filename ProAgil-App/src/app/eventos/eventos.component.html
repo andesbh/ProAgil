@@ -1,0 +1,14 @@
+
+<div class="container">
+  <div class="row border font-weight-bold">
+    <div class="col border">Tema</div>
+    <div class="col border">Local</div>
+  </div>
+      <div *ngFor="let evento of eventos"> 
+        <div class="row border">
+          <div class="col border">{{evento.tema}}</div>
+          <div class="col border">{{evento.local}}</div>
+        </div>
+    </div>
+   
+</div>

@@ -1,14 +1,14 @@
 
 <div class="container">
-  <div class="row border font-weight-bold">
-    <div class="col border">Tema</div>
-    <div class="col border">Local</div>
-  </div>
+  <h2>
+    {{title}}!
+    <hr />
+  </h2>
+
       <div *ngFor="let evento of eventos"> 
-        <div class="row border">
-          <div class="col border">{{evento.tema}}</div>
-          <div class="col border">{{evento.local}}</div>
-        </div>
-    </div>
-   
+          Tema: {{evento.tema}}
+          <br />
+          Local: {{evento.local}}
+          <hr />
+      </div>
 </div>

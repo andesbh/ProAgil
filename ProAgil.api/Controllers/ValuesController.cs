@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ProAgil.api.Data;
 using ProAgil.api.Models;
 
 namespace ProAgil.api.Controllers
@@ -11,14 +12,20 @@ namespace ProAgil.api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        public DataContext _contexto { get; }
+
+        public ValuesController(DataContext Contexto)
+        {
+            this._contexto = Contexto;
+        }
+
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Eventos>> Get()
+        public ActionResult<IEnumerable<Evento>> Get()
         {
-            
-            return new List<Eventos>()
-            {new Eventos{Tema="Teste", Local="teste2"},
-            {new Eventos{Tema="Test3", Local="teste4"}}};
+           
+           return _contexto.Eventos.ToList();
             
         }
 

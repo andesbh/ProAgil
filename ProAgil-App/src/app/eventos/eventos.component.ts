@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class EventosComponent implements OnInit {
 
   eventos: IEventos[];
+  title = 'ProAgil Eventos !';
 
   constructor(private http: HttpClient) { }
 
@@ -29,6 +30,7 @@ export class EventosComponent implements OnInit {
 }
 
 export interface IEventos {
+  eventoId: int;
   tema: string;
   local: string;
 }

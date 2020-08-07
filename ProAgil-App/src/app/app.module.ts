@@ -6,19 +6,28 @@ import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NavComponent } from './nav/nav.component';
+import { FormsModule } from '@angular/forms';
+import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
+import { EventoService } from './_services/evento.service';
+// import { EventoService } from './_services/evento.service';
 
 @NgModule({
    declarations: [
       AppComponent,
       EventosComponent,
-      NavComponent
+      NavComponent,
+      DateTimeFormatPipePipe
    ],
    imports: [
       BrowserModule,
       AppRoutingModule,
-      HttpClientModule
+      HttpClientModule,
+      FormsModule
    ],
-   providers: [],
+   providers: [
+      // Terceira forma de injetar o serviço para ser utilizado em todo o projeto
+      EventoService
+   ],
    bootstrap: [
       AppComponent
    ]

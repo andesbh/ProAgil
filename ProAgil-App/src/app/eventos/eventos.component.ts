@@ -1,36 +1,55 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { EventoService } from '../_services/evento.service';
+import { Evento } from '../_models/Evento';
+
 
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
   styleUrls: ['./eventos.component.css']
+  // Segunda forma de injetar o servico para ser utilizado somente neste local
+  // providers: [EventoService]
 })
 export class EventosComponent implements OnInit {
+  // tslint:disable-next-line: variable-name
+  private _filtroLista: string;
+  public get filtroLista(): string {
+    return this._filtroLista;
+  }
+  public set filtroLista(value: string) {
+    this._filtroLista = value;
+    this.eventosFiltrados = this.filtroLista === '' ? this.eventos : this.filtrarEvento(this.filtroLista);
+  }
 
-  eventos: IEventos[];
-  title = 'ProAgil Eventos !';
+  eventos: Evento[];
+  eventosFiltrados: Evento[] = null;
+  imagemLargura = 50;
+  imagemMargem = 2;
+  mostrarImagem = true;
 
-  constructor(private http: HttpClient) { }
+  constructor(private eventoService: EventoService) { }
 
   ngOnInit() {
     this.GetEventos();
   }
-
-
-  GetEventos() {
-    this.http.get<IEventos[]>('http://localhost:5000/api/values').subscribe(
-        response =>  {
-          this.eventos = response;
-        }, error => {
-          console.log(error);
-        });
+  AlternarImagem() {
+    this.mostrarImagem = !this.mostrarImagem;
   }
-
-}
-
-export interface IEventos {
-  eventoId: int;
-  tema: string;
-  local: string;
-}
+  GetEventos() {
+    this.eventoService.getAllEventos().subscribe(
+    // tslint:disable-next-line: variable-name
+    (_eventos: Evento[]) =>  {
+      this.eventos = _eventos;
+    }, error => {
+      console.log(error);
+    });
+  }
+  filtrarEvento(filtroLista: string): Evento[] {
+    return this.eventos.filter(
+      f => f.tema.toLocaleLowerCase().indexOf(filtroLista.toLocaleLowerCase()) !== -1
+      );
+    }
+    retornaEventos(): Evento[] {
+      return this.eventosFiltrados === null ? this.eventos : this.eventosFiltrados;
+    }
+  }

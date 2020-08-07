@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProAgil.api.Data;
-using ProAgil.api.Models;
+using Microsoft.EntityFrameworkCore;
+using ProAgil.Repositorio;
 
 namespace ProAgil.api.Controllers
 {
@@ -12,22 +13,32 @@ namespace ProAgil.api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        public DataContext _contexto { get; }
+        public ProAgilContext  _contexto { get; }
 
-        public ValuesController(DataContext Contexto)
+        public ValuesController(ProAgilContext Contexto)
         {
             this._contexto = Contexto;
         }
 
 
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<Evento>> Get()
-        {
+        // // GET api/values
+        // [HttpGet]
+        // public async Task<IActionResult> Get()
+        // {
            
-           return _contexto.Eventos.ToList();
+        // //    try{
+        // //        var results = await _contexto.Eventos.ToListAsync();
+        // //        return Ok(results);
+
+        // //    }
+        // //    catch(Exception ex)
+        // //    {
+        // //        return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+        // //    }
+
+        // return NotFound();
             
-        }
+        // }
 
         // GET api/values/5
         [HttpGet("{id}")]

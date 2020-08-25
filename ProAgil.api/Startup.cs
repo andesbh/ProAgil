@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ProAgil.Repositorio;
+using AutoMapper;
 
 namespace ProAgil.api
 {
@@ -29,6 +30,7 @@ namespace ProAgil.api
         {
             services.AddDbContext<ProAgil.Repositorio.ProAgilContext>(x => x.UseSqlServer(Configuration.GetConnectionString("dbAgileTeste")));
             services.AddScoped<IProAgilRepositorio, ProAgilRepositorio>();
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
             

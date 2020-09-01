@@ -8,13 +8,20 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+import { ContatosComponent } from './contatos/contatos/contatos.component';
+import { PalestrantesComponent } from './palestrantes/palestrantes/palestrantes.component';
+import { TituloComponent } from './_shared/titulo/titulo.component';
 
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 import { EventoService } from './_services/evento.service';
+
+
 
 
 @NgModule({
@@ -22,6 +29,10 @@ import { EventoService } from './_services/evento.service';
       AppComponent,
       EventosComponent,
       NavComponent,
+      DashboardComponent,
+      ContatosComponent,
+      PalestrantesComponent,
+      TituloComponent,
       DateTimeFormatPipePipe
    ],
    imports: [
@@ -35,6 +46,10 @@ import { EventoService } from './_services/evento.service';
       BsDropdownModule.forRoot(),
       BrowserAnimationsModule,
       ReactiveFormsModule,
+      ToastrModule.forRoot({
+         timeOut: 2000,
+         preventDuplicates: true,
+       }),
    ],
    providers: [
       // Terceira forma de injetar o serviço para ser utilizado em todo o projeto

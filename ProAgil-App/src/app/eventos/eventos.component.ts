@@ -8,6 +8,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { DateTimeFormatPipePipe } from '../_helps/DateTimeFormatPipe.pipe';
 import { Constantes } from '../Util/Constantes';
 import { MensagensServiceService } from '../_services/mensagensService.service';
+import { ToastrService } from 'ngx-toastr';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -31,10 +32,10 @@ export class EventosComponent implements OnInit {
   editando = false;
   bodyDeletarEvento: string;
 
-
+  titulo = 'Eventos';
   constructor(private eventoService: EventoService, private modalService: BsModalService, private fb: FormBuilder,
               private localeService: BsLocaleService, private DateTimeFormat: DateTimeFormatPipePipe,
-              private Mensagens: MensagensServiceService) {
+              private Mensagens: MensagensServiceService, private toastr: ToastrService) {
     this.localeService.use('pt-br');
   }
 
@@ -53,7 +54,12 @@ export class EventosComponent implements OnInit {
     this.mostrarImagem = !this.mostrarImagem;
   }
   GetEventos() {
-    this.eventoService.getAllEventos().subscribe((_eventos: Evento[]) =>  {this.eventos = _eventos; }, error => {console.log(error); });
+    // tslint:disable-next-line: variable-name
+    this.eventoService.getAllEventos().subscribe((_eventos: Evento[]) =>  {
+                                    this.eventos = _eventos;
+                                  }, error => {
+                                    this.toastr.error(`Erro ao carregar os registros. Erro: ${error}`, 'Proagil');
+                                  });
   }
   filtrarEvento(filtroLista: string): Evento[] {
     return this.eventos.filter(
@@ -98,7 +104,15 @@ export class EventosComponent implements OnInit {
       if (this.registerForm.valid) {
         this.evento = Object.assign({}, this.registerForm.value);
         this.eventoService.PostEvento( this.evento)
-                            .subscribe((evento: Evento) => {console.log(evento); this.GetEventos(); }, error => {console.log(error); });
+                            .subscribe((evento: Evento) => {
+                              console.log(evento);
+                              this.GetEventos();
+                              this.toastr.success('Dados inseridos com sucesso!', 'ProAgil');
+                              },
+                              error => {
+                                console.log(error);
+                                this.toastr.error(`Erro ao salvar. Erro: ${error}`, 'Proagil');
+                               });
         template.hide();
       }
     }
@@ -107,7 +121,14 @@ export class EventosComponent implements OnInit {
         this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
         console.log(this.evento);
         this.eventoService.PutEvento(this.evento)
-                    .subscribe((evento: Evento) => {console.log(evento); this.GetEventos();}, error => {console.log(error); });
+                    .subscribe((evento: Evento) => {
+                      console.log(evento);
+                      this.GetEventos();
+                      this.toastr.success('Dados atualizados com sucesso!', 'ProAgil');
+                    }, error => {
+                      console.log(error);
+                      this.toastr.error(`Erro ao atualizar. Erro: ${error}`, 'Proagil');
+                    });
         template.hide();
       }
     }
@@ -129,8 +150,10 @@ export class EventosComponent implements OnInit {
         () => {
             template.hide();
             this.GetEventos();
+            this.toastr.success('Dados deletados com sucesso!', 'ProAgil');
           }, error => {
             console.log(error);
+            this.toastr.error(`Erro ao deletar o registro. Erro: ${error}`, 'Proagil');
           }
       );
     }

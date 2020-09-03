@@ -13,16 +13,20 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ProAgil.Repositorio;
 using AutoMapper;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ProAgil.api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        
+        public Startup(IConfiguration configuration) 
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
+               
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -53,6 +57,12 @@ namespace ProAgil.api
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseStaticFiles();
+            app.UseStaticFiles(
+                new StaticFileOptions() {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                    RequestPath = new PathString("/Resources")
+                }
+            );
         }
     }
 }

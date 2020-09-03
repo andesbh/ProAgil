@@ -38,7 +38,7 @@
     <tbody>
       <tr *ngFor="let evento of retornaEventos()">
         <td>
-          <img src="http://localhost:5000/img/{{evento.imagemUrl}}"
+          <img src="http://localhost:5000/Resources/Images/{{evento.imagemUrl}}?_ts={{dataAtual}}"
           [style.width.px]="imagemLargura"
           [style.margin.px]="imagemMargem"
           *ngIf="mostrarImagem"
@@ -139,7 +139,15 @@
               </div>
               <div class="form-group col-md-9">
                 <label>Imagem</label>
-                <input type="text"  class="form-control" [ngClass]="{'is-invalid': registerForm.get('imagemUrl').errors && registerForm.get('imagemUrl').touched}" formControlName="imagemUrl">
+                <table>
+                  <tr>
+                    <td>
+                      <button class="btn btn-success" (click)="file.click()">Enviar imagem</button>
+                      <input style="display: none;" type="file" #file  class="form-control" [ngClass]="{'is-invalid': registerForm.get('imagemUrl').errors && registerForm.get('imagemUrl').touched}" (change)="onFileChange($event)" formControlName="imagemUrl">
+                    </td>
+                  </tr>
+                </table>
+                
                 <div *ngIf="registerForm.get('imagemUrl').hasError('required') && registerForm.get('imagemUrl').touched" class="invalid-feedback">
                   Imagem Obrigatório
               </div>

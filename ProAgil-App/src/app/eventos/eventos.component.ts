@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/
 import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { defineLocale, ptBrLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { DateTimeFormatPipePipe } from '../_helps/DateTimeFormatPipe.pipe';
@@ -33,6 +33,9 @@ export class EventosComponent implements OnInit {
   bodyDeletarEvento: string;
 
   titulo = 'Eventos';
+  file: File;
+  imagemToUpdate: string;
+  dataAtual: string;
   constructor(private eventoService: EventoService, private modalService: BsModalService, private fb: FormBuilder,
               private localeService: BsLocaleService, private DateTimeFormat: DateTimeFormatPipePipe,
               private Mensagens: MensagensServiceService, private toastr: ToastrService) {
@@ -72,7 +75,11 @@ export class EventosComponent implements OnInit {
 
     editarEvento(template: any, evento: Evento) {
       this.editando = true;
-      this.openModal(template, evento);
+      this.evento = Object.assign({}, evento);
+      this.imagemToUpdate = this.evento.imagemUrl.toString();
+      this.evento.imagemUrl = '';
+      this.registerForm.patchValue(this.evento);
+      this.openModal(template, this.evento);
     }
 
     novoEvento(template: any) {
@@ -103,6 +110,8 @@ export class EventosComponent implements OnInit {
     salvarAlteracao(template: any) {
       if (this.registerForm.valid) {
         this.evento = Object.assign({}, this.registerForm.value);
+
+        this.uploadImagem(false);
         this.eventoService.PostEvento( this.evento)
                             .subscribe((evento: Evento) => {
                               console.log(evento);
@@ -119,7 +128,8 @@ export class EventosComponent implements OnInit {
     editarAlteracao(template: any) {
       if (this.registerForm.valid) {
         this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
-        console.log(this.evento);
+
+        this.uploadImagem(true);
         this.eventoService.PutEvento(this.evento)
                     .subscribe((evento: Evento) => {
                       console.log(evento);
@@ -132,14 +142,24 @@ export class EventosComponent implements OnInit {
         template.hide();
       }
     }
-    // excluirEvento(evento: Evento) {
-    //   console.log(evento);
-    //   if (confirm(this.Mensagens.confimaDelete())) {
-    //     this.eventoService.DeleteEvento(evento)
-    //                                     .subscribe((eventoteste: any) => {console.log(eventoteste);}, error => {console.log(error); });
-    //     this.GetEventos();
-    //   }
-    // }
+
+    uploadImagem(update: boolean) {
+
+      let nomeArquivo: string;
+      if (update) {
+        nomeArquivo = this.imagemToUpdate;
+        console.log(nomeArquivo);
+        this.registerForm.removeControl('imgUpdate');
+      } else {
+        nomeArquivo = this.evento.imagemUrl.split('\\', 3)[2];
+      }
+      this.evento.imagemUrl = nomeArquivo;
+      this.eventoService.postUpload(this.file, nomeArquivo)
+        .subscribe(
+          () => { this.dataAtual = new Date().getMilliseconds().toString();
+                  this.GetEventos(); }
+        );
+    }
     excluirEvento(evento: Evento, template: any) {
       template.show(template);
       this.evento = evento;
@@ -156,5 +176,14 @@ export class EventosComponent implements OnInit {
             this.toastr.error(`Erro ao deletar o registro. Erro: ${error}`, 'Proagil');
           }
       );
+    }
+    onFileChange(event: any) {
+
+      const reader = new FileReader();
+
+      if (event.target.files && event.target.files.length){
+        this.file = event.target.files;
+      }
+
     }
   }

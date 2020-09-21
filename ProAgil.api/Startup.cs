@@ -16,6 +16,13 @@ using AutoMapper;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using ProAgil.Dominio.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ProAgil.api
 {
@@ -35,7 +42,42 @@ namespace ProAgil.api
             services.AddDbContext<ProAgil.Repositorio.ProAgilContext>(x => x.UseSqlServer(Configuration.GetConnectionString("dbAgileTeste")));
             services.AddScoped<IProAgilRepositorio, ProAgilRepositorio>();
             services.AddAutoMapper();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            IdentityBuilder builder = services.AddIdentityCore<User>(option => {
+                            option.Password.RequireDigit = false;
+                            option.Password.RequireNonAlphanumeric = false;
+                            option.Password.RequireLowercase = false;
+                            option.Password.RequireUppercase= false;
+                            option.Password.RequiredLength = 4;  
+            });
+
+            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder.AddEntityFrameworkStores<ProAgilContext>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                        .AddJwtBearer(option => {
+                                option.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuerSigningKey = true,
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                                    ValidateIssuer = false,
+                                    ValidateAudience = false
+                                };
+                        });
+            
+
+
+            services.AddMvc(option => {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                option.Filters.Add(new AuthorizeFilter(policy));
+            } )
+               .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+               .AddJsonOptions(option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
             services.AddCors();
             
         }
@@ -52,6 +94,8 @@ namespace ProAgil.api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseAuthentication();
 
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseHttpsRedirection();

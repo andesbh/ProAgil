@@ -154,33 +154,33 @@ namespace ProAgil.api.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> upload()
+        public IActionResult upload()
         {
-           
-           try{
-               
-               var file = Request.Form.Files[0];
-               var folderName = Path.Combine("Resources", "Images");
-               var pathToSalve = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                if(file.Length > 0){
+            try
+            {
+
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSalve = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length > 0)
+                {
                     var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
-                    var fullPath = Path.Combine(pathToSalve, fileName.Replace("\""," ").Trim());
+                    var fullPath = Path.Combine(pathToSalve, fileName.Replace("\"", " ").Trim());
 
-                    using(var stream = new FileStream(fullPath, FileMode.Create)){
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
                         file.CopyTo(stream);
                     }
                 }
 
-               return Ok();
-           }
-           catch(Exception ex)
-           {
-               return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-           }
-
-           return BadRequest("Erro ao tentar fazer o upload");
-            
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

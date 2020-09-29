@@ -17,11 +17,12 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { ContatosComponent } from './contatos/contatos/contatos.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes/palestrantes.component';
 import { TituloComponent } from './_shared/titulo/titulo.component';
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 import { EventoService } from './_services/evento.service';
-
-
 
 
 @NgModule({
@@ -33,7 +34,10 @@ import { EventoService } from './_services/evento.service';
       ContatosComponent,
       PalestrantesComponent,
       TituloComponent,
-      DateTimeFormatPipePipe
+      DateTimeFormatPipePipe,
+      UserComponent,
+      LoginComponent,
+      RegistrationComponent
    ],
    imports: [
       BrowserModule,

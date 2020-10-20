@@ -7,8 +7,8 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
+import { AuthGuard } from './auth/auth.guard';
 
-//testetetete
 const routes: Routes = [
   {path: 'user', component: UserComponent,
     children: [
@@ -16,10 +16,10 @@ const routes: Routes = [
       {path: 'registration', component: RegistrationComponent},
     ]
   },
-  {path: 'eventos', component: EventosComponent},
-  {path: 'palestrantes', component: PalestrantesComponent},
-  {path: 'contatos', component: ContatosComponent},
-  {path: 'dashboard', component: DashboardComponent},
+  {path: 'eventos', component: EventosComponent, canActivate: [AuthGuard]},
+  {path: 'palestrantes', component: PalestrantesComponent, canActivate: [AuthGuard]},
+  {path: 'contatos', component: ContatosComponent, canActivate: [AuthGuard]},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   {path: '**', redirectTo: 'dashboard', pathMatch: 'full'},
 ];

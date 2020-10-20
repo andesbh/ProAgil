@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -23,6 +23,7 @@ import { RegistrationComponent } from './user/registration/registration.componen
 
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 import { EventoService } from './_services/evento.service';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 
 @NgModule({
@@ -58,7 +59,12 @@ import { EventoService } from './_services/evento.service';
    providers: [
       // Terceira forma de injetar o serviço para ser utilizado em todo o projeto
       EventoService,
-      DateTimeFormatPipePipe
+      DateTimeFormatPipePipe,
+      {
+         provide: HTTP_INTERCEPTORS,
+         useClass: AuthInterceptor,
+         multi: true
+      }
    ],
    bootstrap: [
       AppComponent

@@ -25,7 +25,7 @@ export class EventosComponent implements OnInit {
   eventos: Evento[];
   evento: Evento;
   eventosFiltrados: Evento[] = null;
-  imagemLargura = 50;
+  imagemLargura = 25;
   imagemMargem = 2;
   mostrarImagem = true;
   registerForm: FormGroup;

@@ -23,10 +23,14 @@ export class NavComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('loginName');
     this.toastr.show('log out');
     this.router.navigate(['/user/login']);
   }
   entrar() {
     this.router.navigate(['/user/login']);
+  }
+  loginName() {
+    return localStorage.getItem('loginName');
   }
 }

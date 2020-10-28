@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastrModule } from 'ngx-toastr';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
@@ -24,6 +25,7 @@ import { RegistrationComponent } from './user/registration/registration.componen
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 import { EventoService } from './_services/evento.service';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { EventoEditComponent } from './eventos/eventoEdit/eventoEdit/eventoEdit.component';
 
 
 @NgModule({
@@ -38,7 +40,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
       DateTimeFormatPipePipe,
       UserComponent,
       LoginComponent,
-      RegistrationComponent
+      RegistrationComponent,
+      EventoEditComponent,
    ],
    imports: [
       BrowserModule,
@@ -55,6 +58,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
          timeOut: 2000,
          preventDuplicates: true,
        }),
+       TabsModule.forRoot(),
    ],
    providers: [
       // Terceira forma de injetar o serviço para ser utilizado em todo o projeto
